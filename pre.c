@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #define MAX 20
 
 typedef struct stack
@@ -37,8 +39,7 @@ int empty(stack *s)
 int full(stack *s)
 {
     if (s->top == MAX - 1)
-        return (1);
-    return (0);
+        return (0);
 }
 
 void push(stack *s, int x)
@@ -57,29 +58,29 @@ int pop(stack *s)
 int main()
 {
     stack s;
-    char x;
+    int size;
     int op1, op2, val;
     init(&s);
+
     printf("Enter the expression : ");
     char arr[MAX];
     scanf("%s", arr);
-    int size;
     size = strlen(arr);
 
-    int i = 0;
+    int x = size - 1;
 
-    while (i < size)
+    while (x >= 0)
     {
-        if (isdigit(arr[i]))
-            push(&s, arr[i] - 48);
+        if (isdigit(arr[x]))
+            push(&s, arr[x] - 48);
         else
         {
-            op2 = pop(&s);
             op1 = pop(&s);
-            val = evaluate(arr[i], op1, op2);
+            op2 = pop(&s);
+            val = evaluate(arr[x], op1, op2);
             push(&s, val);
         }
-        i++;
+        x--;
     }
     val = pop(&s);
     printf("Value of expression = %d\n", val);

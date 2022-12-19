@@ -41,7 +41,7 @@ int prefixEval(stack p)
     {
         if (exp[i] != '+' && exp[i] != '*' && exp[i] != '/' && exp[i] != '-' && exp[i] != '^' && exp[i] != ' ')
             num = num * 10 + (int)exp[i] - 48;
-        else if (exp[i] == '+' exp[i] == '*' exp[i] == '/' exp[i] == '-' exp[i] == '^')
+        else if (exp[i] == '+' || exp[i] == '*' || exp[i] == '/' || exp[i] == '-' || exp[i] == '^')
         {
             int a = pop(&p);
             int b = pop(&p);

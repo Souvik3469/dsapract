@@ -29,7 +29,7 @@ int max(int a, int b)
 {
     return (a > b) ? a : b;
 }
-struct node *rightrotate(struct node *y)
+struct node *rightRotate(struct node *y)
 {
     struct node *x = y->left;
     struct node *T2 = x->right;
@@ -39,7 +39,7 @@ struct node *rightrotate(struct node *y)
     x->height = max(height(x->left), height(x->right)) + 1;
     return x;
 }
-struct node *leftrotate(struct node *x)
+struct node *leftRotate(struct node *x)
 {
     struct node *y = x->right;
     struct node *T2 = y->left;
@@ -49,35 +49,80 @@ struct node *leftrotate(struct node *x)
     y->height = max(height(y->left), height(y->right)) + 1;
     return y;
 }
-struct node *insert(struct node *root, int data)
+int getBalanceFactor(struct node *n)
 {
-    if (root == NULL)
-        return newnode(data);
-    if (data < root->data)
+    if (n == NULL)
     {
-        root->left = insert(root->left, data);
-        if (height(root->left) - height(root->right) == 2)
-        {
-            if (data < root->left->data)
-                root = rightrotate(root);
-            else
-                root = leftrotate(root);
-        }
+        return 0;
     }
-    else if (data > root->data)
-    {
-        root->right = insert(root->right, data);
-        if (height(root->right) - height(root->left) == 2)
-        {
-            if (data > root->right->data)
-                root = leftrotate(root);
-            else
-                root = rightrotate(root);
-        }
-    }
-    root->height = max(height(root->left), height(root->right)) + 1;
-    return root;
+    return height(n->left) - height(n->right);
 }
+struct node *insert(struct node *node, int data)
+{
+    if (node == NULL)
+        return newnode(data);
+
+    if (data < node->data)
+        node->left = insert(node->left, data);
+    else if (data > node->data)
+        node->right = insert(node->right, data);
+
+    node->height = 1 + max(height(node->left), height(node->right));
+    int bf = getBalanceFactor(node);
+
+    // Left Left Case
+    if (bf > 1 && data < node->left->data)
+    {
+        return rightRotate(node);
+    }
+    // Right Right Case
+    if (bf < -1 && data > node->right->data)
+    {
+        return leftRotate(node);
+    }
+    // Left Right Case
+    if (bf > 1 && data > node->left->data)
+    {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+    // Right Left Case
+    if (bf < -1 && data < node->right->data)
+    {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+    return node;
+} /*
+ struct node *insert(struct node *root, int data)
+ {
+     if (root == NULL)
+         return newnode(data);
+     if (data < root->data)
+     {
+         root->left = insert(root->left, data);
+         if (height(root->left) - height(root->right) == 2)
+         {
+             if (data < root->left->data)
+                 root = rightrotate(root);
+             else
+                 root = leftrotate(root);
+         }
+     }
+     else if (data > root->data)
+     {
+         root->right = insert(root->right, data);
+         if (height(root->right) - height(root->left) == 2)
+         {
+             if (data > root->right->data)
+                 root = leftrotate(root);
+             else
+                 root = rightrotate(root);
+         }
+     }
+     root->height = max(height(root->left), height(root->right)) + 1;
+     return root;
+ }*/
 struct node *minvalue(struct node *root)
 {
     struct node *current = root;
